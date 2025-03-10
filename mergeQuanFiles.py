@@ -49,8 +49,8 @@ def merge_csv_by_action_label(root_folder, output_folder):
         print(f"Merged {len(dataframes)} files into: {output_file}")
 
 if __name__ == "__main__":
-    root_folder = "E:/LSCDATA/golden_corpus/suggest_1"
-    output_folder = "E:/LSCDATA/golden_corpus/suggest_1"
+    root_folder = "E:/LSCDATA/Ground truth LSC"
+    output_folder = "E:/LSCDATA/Ground truth LSC"
 
     if os.path.exists(root_folder):
         merge_csv_by_action_label(root_folder, output_folder)
