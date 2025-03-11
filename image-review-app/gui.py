@@ -99,7 +99,7 @@ class ImageReviewApp:
             return
 
         self.action_label = os.path.basename(file_path).replace(".csv", "")
-        self.title_label.config(text=f"Is this image belong to {self.action_label}?")
+        self.title_label.config(text=f"Is {self.action_label} the main activity of this image?")
         self.images = get_filtered_images(file_path)
         self.current_index = 0
 
