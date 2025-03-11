@@ -78,7 +78,7 @@
 ### Một số ví dụ
 | Image | Label                           | Image | Label                                     |
 |-------|---------------------------------|-------|-------------------------------------------|
-|<img src="img/attend_a_meeting.jpg" width="160px">       | "attending a meeting",          |<img src="img/image.png" width="160px">       | "preparing some food",                    |
+|<img src="img/attend_a_meeting.jpg" width="160px">       | "attending a meeting",          |<img src="img/image.png" width="160px">| "preparing some food",                    |
 |<img src="img/attend_presentation.jpg" width="160px">       | "attending a presentation",     |<img src="img/image-1.png" width="160px">       | "reading documents",                      |
 |<img src="img/image-2.png" width="160px">       | "grooming",                     |<img src="img/image-3.png" width="160px">       | "riding a bike or motorbike",             |
 |<img src="img/image-4.png" width="160px">       | "doing office work",            |<img src="img/20191130_195043_000.jpg" width="160px">       | "shopping",                               |
@@ -108,7 +108,7 @@
 | 2a. Ngồi ăn với 1 người nào đó (**không nhìn thấy đồ ăn** nhưng biết là đang ngồi ở quán ăn) | | having a conversation | không phải eating |
 | 2b. Ngồi ăn với 1 người nào đó, thấy đồ ăn nhưng người đối diện đang mở miệng ra nói chuyện hoặc bản thân có gesture giao tiếp | <img src="img/image-25.png" width="160px"> | having a conversation | không phải eating |
 | 2c. Ngồi ăn với 1 người nào đó **(nhìn thấy bàn đồ ăn)** |  | eating |
-| 2d. Ngồi uống với 1 người nào đó, thấy đồ uống nhưng người đối diện đang mở miệng ra nói chuyện | <img src="img/image-25.png" width="160px"> | having a conversation | không phải drinking  |
+| 2d. Ngồi uống với 1 người nào đó, thấy đồ uống nhưng người đối diện đang mở miệng ra nói chuyện |  | having a conversation | không phải drinking  |
 | 2e. Trên bàn vừa có đồ ăn, đồ uống nhưng không thấy tay cầm ly đồ uống |  | eating | Ưu tiên eating > having a drink |
 | 3a. Cầm sách, báo, menu lên đọc | <img src="img/20191130_135743_000.jpg" width="160px"> | reading documents  |
 | 3b. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị | <img src="img/20191031_080358_000.jpg" width="160px"> <img src="img/20191031_083135_000.jpg" width="160px"> | doing office work  |
