@@ -62,13 +62,17 @@
   - **Ảnh chỉ có A**: A là **main action**.
   - **Ảnh có cả A (lâu dài) và B (xen ngang)**: B là **main action**, A là **concurrent action**.
   - **Ví dụ**:
- 
+    <div style="display: flex; justify-content: center;">
+      <img src="img/20191031_135054_000.jpg" width="200px" style="margin-right: 10px;">
+      <img src="img/20191031_135325_000.jpg" width="200px" style="margin-right: 10px;">
+      <img src="img/20191031_135359_000.jpg" width="200px">
+    </div>    
     
     | Hình ảnh | Main Action | Concurrent Action |
     | --- | --- | --- |
-    | <img src="img/20191031_135054_000.jpg">	| attending a presentation | |
-    | <img src="img/20191031_135325_000.jpg"> | using computer | attending a presentation |
-    |  <img src="img/20191031_135359_000.jpg" >	| attending a presentation | |
+    | Ảnh 1	| attending a presentation | |
+    | Ảnh 2 | using computer | attending a presentation |
+    | Ảnh 3	| attending a presentation | |
       
 ---
 ### Một số ví dụ
@@ -105,7 +109,7 @@
 | 2b. Ngồi ăn với 1 người nào đó, thấy đồ ăn nhưng người đối diện đang mở miệng ra nói chuyện hoặc bản thân có gesture giao tiếp | <img src="img/image-25.png"> | having a conversation | không phải eating |
 | 2c. Ngồi ăn với 1 người nào đó **(nhìn thấy bàn đồ ăn)** |  | eating |
 | 2d. Ngồi uống với 1 người nào đó, thấy đồ uống nhưng người đối diện đang mở miệng ra nói chuyện | <img src="img/image-25.png"> | having a conversation | không phải drinking  |
-| 2e. Trên bàn vừa có đồ ăn, đồ uống nhưng không thấy tay cầm ly đồ uống | <img src="img/image-25.png"> | eating | Ưu tiên eating > having a drink |
+| 2e. Trên bàn vừa có đồ ăn, đồ uống nhưng không thấy tay cầm ly đồ uống |  | eating | Ưu tiên eating > having a drink |
 | 3a. Cầm sách, báo, menu lên đọc | <img src="img/20191130_135743_000.jpg"> | reading documents  |
 | 3b. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị | <img src="img/20191031_080358_000.jpg"> <img src="img/20191031_083135_000.jpg"> | doing office work  |
 | 3c. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị, có sử dụng máy tính | <img src="img/20191031_091938_000.jpg"> | using computer | không phải doing office work |
