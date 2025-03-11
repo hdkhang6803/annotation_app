@@ -18,15 +18,15 @@
 ### Cấu trúc thư mục ảnh:
 ```
 201901/
-    01/
-        20190101_103717_000.jpg
-        20190101_103749_000.jpg
-        *.jpg
-        ...
-    02/
-    03/
+  01/
+    20190101_103717_000.jpg
+    20190101_103749_000.jpg
+    *.jpg
     ...
-    31/
+  02/
+  03/
+  ...
+  31/
 201902/
 201903/
 ...
@@ -62,38 +62,38 @@
   - **Ảnh chỉ có A**: A là **main action**.
   - **Ảnh có cả A (lâu dài) và B (xen ngang)**: B là **main action**, A là **concurrent action**.
   - **Ví dụ**:
-    <div style="display: flex; justify-content: center;">
-      <img src="img/20191031_135054_000.jpg" width="200px" style="margin-right: 10px;">
-      <img src="img/20191031_135325_000.jpg" width="200px" style="margin-right: 10px;">
-      <img src="img/20191031_135359_000.jpg" width="200px">
-    </div>    
+  <div style="display: flex; justify-content: center;">
+    <img src="img/20191031_135054_000.jpg" width="200px" style="margin-right: 10px;">
+    <img src="img/20191031_135325_000.jpg" width="200px" style="margin-right: 10px;">
+    <img src="img/20191031_135359_000.jpg" width="200px">
+  </div>    
+  
+  | Hình ảnh | Main Action | Concurrent Action |
+  | --- | --- | --- |
+  | Ảnh 1	| attending a presentation | |
+  | Ảnh 2 | using computer | attending a presentation |
+  | Ảnh 3	| attending a presentation | |
     
-    | Hình ảnh | Main Action | Concurrent Action |
-    | --- | --- | --- |
-    | Ảnh 1	| attending a presentation | |
-    | Ảnh 2 | using computer | attending a presentation |
-    | Ảnh 3	| attending a presentation | |
-      
 ---
 ### Một số ví dụ
 | Image | Label                           | Image | Label                                     |
 |-------|---------------------------------|-------|-------------------------------------------|
-|<img src="img/attend_a_meeting.jpg">       | "attending a meeting",          |<img src="img/image.png">       | "preparing some food",                    |
-|<img src="img/attend_presentation.jpg">       | "attending a presentation",     |<img src="img/image-1.png">       | "reading documents",                      |
-|<img src="img/image-2.png">       | "grooming",                     |<img src="img/image-3.png">       | "riding a bike or motorbike",             |
-|<img src="img/image-4.png">       | "doing office work",            |<img src="img/20191130_195043_000.jpg">       | "shopping",                               |
-|<img src="img/image-5.png">       | "doing the cleaning",           |<img src="img/image-6.png">       | "taking a bus",                           |
-|<img src="img/image-7.png">       | "doing the laundry",            |<img src="img/case_1a_takingphoto.png">       | "taking a photo",                         |
-|<img src="img/image-8.png">       | "driving",                      |<img src="img/image-9.png">       | "taking a plane",                         |
-|<img src="img/image-10.png">       | "eating",                       | <img src="img/image-11.png">      | "taking a train",                         |
-|<img src="img/image-12.png">       | "personal hygiene",             |<img src="img/image-13.png">       | "taking out the trash",                   |
-|<img src="img/image-14.png"> <img src="img/image-15.png">      | "having a casual conversation", |<img src="img/20191031_135325_000.jpg">       | "using a computer",                       |
-|<img src="img/image-16.png">       | "having a drink",               |<img src="img/20191031_135741_000.jpg">       | "using a mobile device",                  |
-|<img src="img/image-17.png">       | "organizing clothes",           |<img src="img/image-18.png">       | "walking indoor",                         |
-|<img src="img/image-19.png">       | "lying",                        |<img src="img/image-20.png">       | "walking outdoor",                        |
-|<img src="img/image-21.png">       | "playing music instruments",    |<img src="img/clean_kitchen.jpg">       | "cleaning kitchenware",                   |
-|<img src="img/image-22.png">       | "NO ACTIVITY"                                |<img src="img/image-23.png">       | "watching tv or digital display devices", |
-|       |                                 |<img src="img/image-24.png">       | "writing",                                |
+|<img src="img/attend_a_meeting.jpg" width="160px">       | "attending a meeting",          |<img src="img/image.png" width="160px">       | "preparing some food",                    |
+|<img src="img/attend_presentation.jpg" width="160px">       | "attending a presentation",     |<img src="img/image-1.png" width="160px">       | "reading documents",                      |
+|<img src="img/image-2.png" width="160px">       | "grooming",                     |<img src="img/image-3.png" width="160px">       | "riding a bike or motorbike",             |
+|<img src="img/image-4.png" width="160px">       | "doing office work",            |<img src="img/20191130_195043_000.jpg" width="160px">       | "shopping",                               |
+|<img src="img/image-5.png" width="160px">       | "doing the cleaning",           |<img src="img/image-6.png" width="160px">       | "taking a bus",                           |
+|<img src="img/image-7.png" width="160px">       | "doing the laundry",            |<img src="img/case_1a_takingphoto.png" width="160px">       | "taking a photo",                         |
+|<img src="img/image-8.png" width="160px">       | "driving",                      |<img src="img/image-9.png" width="160px">       | "taking a plane",                         |
+|<img src="img/image-10.png" width="160px">       | "eating",                       | <img src="img/image-11.png" width="160px">      | "taking a train",                         |
+|<img src="img/image-12.png" width="160px">       | "personal hygiene",             |<img src="img/image-13.png" width="160px">       | "taking out the trash",                   |
+|<img src="img/image-14.png" width="160px"> <img src="img/image-15.png" width="160px">      | "having a casual conversation", |<img src="img/20191031_135325_000.jpg" width="160px">       | "using a computer",                       |
+|<img src="img/image-16.png" width="160px">       | "having a drink",               |<img src="img/20191031_135741_000.jpg" width="160px">       | "using a mobile device",                  |
+|<img src="img/image-17.png" width="160px">       | "organizing clothes",           |<img src="img/image-18.png" width="160px">       | "walking indoor",                         |
+|<img src="img/image-19.png" width="160px">       | "lying",                        |<img src="img/image-20.png" width="160px">       | "walking outdoor",                        |
+|<img src="img/image-21.png" width="160px">       | "playing music instruments",    |<img src="img/clean_kitchen.jpg" width="160px">       | "cleaning kitchenware",                   |
+|<img src="img/image-22.png" width="160px">       | "NO ACTIVITY"                                |<img src="img/image-23.png" width="160px">       | "watching tv or digital display devices", |
+|       |                                 |<img src="img/image-24.png" width="160px">       | "writing",                                |
 
 
 ---
@@ -101,24 +101,24 @@
 ### Một số trường hợp đặc biệt
 | Case | Hình ảnh | Main Label | Giải thích |
 |---|---|---|---|
-| 0a. Di chuyển trong nhà, di chuyển liên tục (nhận diện qua việc xem các ảnh liên tiếp) | <img src="img/20191130_074933_000.jpg"> | walking indoor  | |
-| 0b. Trong nhà, đứng/ngồi lâu một chỗ (không phải lying) | <img src="img/20191130_080248_000.jpg"> | NO ACTIVITY | |
-| 1a. Giơ điện thoại lên chụp hình | <img src="img/case_1a_takingphoto.png"> | taking a photo | |       
-| 1b. Có điện thoại trong ảnh nhưng không chụp hình | <img src="img/20191031_135741_000.jpg"> | using mobile device  | |
+| 0a. Di chuyển trong nhà, di chuyển liên tục (nhận diện qua việc xem các ảnh liên tiếp) | <img src="img/20191130_074933_000.jpg" width="160px"> | walking indoor  | |
+| 0b. Trong nhà, đứng/ngồi lâu một chỗ (không phải lying) | <img src="img/20191130_080248_000.jpg" width="160px"> | NO ACTIVITY | |
+| 1a. Giơ điện thoại lên chụp hình | <img src="img/case_1a_takingphoto.png" width="160px"> | taking a photo | |       
+| 1b. Có điện thoại trong ảnh nhưng không chụp hình | <img src="img/20191031_135741_000.jpg" width="160px"> | using mobile device  | |
 | 2a. Ngồi ăn với 1 người nào đó (**không nhìn thấy đồ ăn** nhưng biết là đang ngồi ở quán ăn) | | having a conversation | không phải eating |
-| 2b. Ngồi ăn với 1 người nào đó, thấy đồ ăn nhưng người đối diện đang mở miệng ra nói chuyện hoặc bản thân có gesture giao tiếp | <img src="img/image-25.png"> | having a conversation | không phải eating |
+| 2b. Ngồi ăn với 1 người nào đó, thấy đồ ăn nhưng người đối diện đang mở miệng ra nói chuyện hoặc bản thân có gesture giao tiếp | <img src="img/image-25.png" width="160px"> | having a conversation | không phải eating |
 | 2c. Ngồi ăn với 1 người nào đó **(nhìn thấy bàn đồ ăn)** |  | eating |
-| 2d. Ngồi uống với 1 người nào đó, thấy đồ uống nhưng người đối diện đang mở miệng ra nói chuyện | <img src="img/image-25.png"> | having a conversation | không phải drinking  |
+| 2d. Ngồi uống với 1 người nào đó, thấy đồ uống nhưng người đối diện đang mở miệng ra nói chuyện | <img src="img/image-25.png" width="160px"> | having a conversation | không phải drinking  |
 | 2e. Trên bàn vừa có đồ ăn, đồ uống nhưng không thấy tay cầm ly đồ uống |  | eating | Ưu tiên eating > having a drink |
-| 3a. Cầm sách, báo, menu lên đọc | <img src="img/20191130_135743_000.jpg"> | reading documents  |
-| 3b. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị | <img src="img/20191031_080358_000.jpg"> <img src="img/20191031_083135_000.jpg"> | doing office work  |
-| 3c. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị, có sử dụng máy tính | <img src="img/20191031_091938_000.jpg"> | using computer | không phải doing office work |
-| 4a. Đi siêu thị, đang di chuyển, có xuất hiện kệ sản phẩm | <img src="img/20191130_195043_000.jpg"> | shopping  | không phải walking indoor
-| 4b. Đi siêu thị, đứng cận quầy sản phẩm để xem hàng/đứng ở quầy thanh toán | <img src="img/20191130_195117_000.jpg"> | shopping  | |
-| 5a. Trong lớp học/phòng họp/... có thấy slide trình chiếu | <img src="img/20191031_143533_000.jpg"> | attending a presentation  | Có sử dụng slide có nghĩa là đang trình bày 1 chủ đề nào đó |
-| 5b. Trong lớp học/phòng họp/... không thấy slide trình chiếu nhưng có 1 người đang trình bày ở **vị trí cao hơn hẳn** (có thể đứng hoặc ngồi) | <img src="img/20191031_135054_000.jpg"> | attending a presentation  | Thầy thường đứng lớp ở vị trí giảng viên |
-| 5c. Trong lớp học/phòng họp/... không thấy slide trình chiếu, **mọi người có vị trí ngang nhau**, giống một cuộc thảo luận | <img src="img/image-26.png"> | attending a meeting  | Thảo luận đơn thuần dùng lời nói để trình bày |
-| 6a. Bàn làm việc có máy tính đang **tắt**. Góc nhìn **không** tập trung vào máy tính.  | <img src="img/image-28.png"> | doing office work  |  |
-| 6b. Bàn làm việc có máy tính đang **tắt**. Góc nhìn tập trung vào máy tính. | <img src="img/image-27.png"> | using a computer  | |
+| 3a. Cầm sách, báo, menu lên đọc | <img src="img/20191130_135743_000.jpg" width="160px"> | reading documents  |
+| 3b. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị | <img src="img/20191031_080358_000.jpg" width="160px"> <img src="img/20191031_083135_000.jpg" width="160px"> | doing office work  |
+| 3c. 1 bàn giấy trong văn phòng, có nhiều giấy tờ/dụng cụ/thiết bị, có sử dụng máy tính | <img src="img/20191031_091938_000.jpg" width="160px"> | using computer | không phải doing office work |
+| 4a. Đi siêu thị, đang di chuyển, có xuất hiện kệ sản phẩm | <img src="img/20191130_195043_000.jpg" width="160px"> | shopping  | không phải walking indoor
+| 4b. Đi siêu thị, đứng cận quầy sản phẩm để xem hàng/đứng ở quầy thanh toán | <img src="img/20191130_195117_000.jpg" width="160px"> | shopping  | |
+| 5a. Trong lớp học/phòng họp/... có thấy slide trình chiếu | <img src="img/20191031_143533_000.jpg" width="160px"> | attending a presentation  | Có sử dụng slide có nghĩa là đang trình bày 1 chủ đề nào đó |
+| 5b. Trong lớp học/phòng họp/... không thấy slide trình chiếu nhưng có 1 người đang trình bày ở **vị trí cao hơn hẳn** (có thể đứng hoặc ngồi) | <img src="img/20191031_135054_000.jpg" width="160px"> | attending a presentation  | Thầy thường đứng lớp ở vị trí giảng viên |
+| 5c. Trong lớp học/phòng họp/... không thấy slide trình chiếu, **mọi người có vị trí ngang nhau**, giống một cuộc thảo luận | <img src="img/image-26.png" width="160px"> | attending a meeting  | Thảo luận đơn thuần dùng lời nói để trình bày |
+| 6a. Bàn làm việc có máy tính đang **tắt**. Góc nhìn **không** tập trung vào máy tính.  | <img src="img/image-28.png" width="160px"> | doing office work  |  |
+| 6b. Bàn làm việc có máy tính đang **tắt**. Góc nhìn tập trung vào máy tính. | <img src="img/image-27.png" width="160px"> | using a computer  | |
 
 ---
