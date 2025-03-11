@@ -7,7 +7,7 @@ import csv
 from file_handler import get_filtered_images, save_approved_image
 from image_display import get_full_image_path
 from api_handler import get_neighbors
-from merge_output import merge_csv_files
+from merge_output import merge_csv_files, rewrite_distinct_record
 from config import OUTPUT_DIR, TEMP_DIR
 
 API_URL = "http://34.97.0.203:8001/explore/explore_neighbor_images"
@@ -183,9 +183,11 @@ class ImageReviewApp:
 
     def update_progress(self):
         """Updates progress label and checks if all images are reviewed."""
-        if self.current_index  + 1>= len(self.images):
+        if self.current_index  + 1> len(self.images):
             self.progress_label.config(text="All images reviewed!")
             messagebox.showinfo("Done!", "You have reviewed all images.")
+            rewrite_distinct_record(f"{TEMP_DIR}/temp_golden_corpus_for_{self.action_label}.csv")
+            rewrite_distinct_record(f"{TEMP_DIR}/declined_{self.action_label}.csv")
             merge_csv_files()
             self.root.quit()  # Exit the app
         else:
@@ -205,6 +207,7 @@ class ImageReviewApp:
             self.load_image()
             self.update_progress()
         else:
+            self.current_index += 1
             self.update_progress()  # This will trigger the exit
 
     def approve_image(self):

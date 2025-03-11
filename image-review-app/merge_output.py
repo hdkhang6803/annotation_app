@@ -30,3 +30,13 @@ def merge_csv_files():
         output_filename = os.path.join(OUTPUT_DIR, f"{action_label}.csv")
         merged_df.to_csv(output_filename, index=False, header=False)
         print(f"Merged and updated to: {output_filename}")
+
+def rewrite_distinct_record(csv_file_path):
+    """Reads a CSV file, removes duplicate records, and rewrites the file."""
+    if os.path.exists(csv_file_path):
+        df = pd.read_csv(csv_file_path, header=None)
+        df = df.drop_duplicates().reset_index(drop=True)
+        df.to_csv(csv_file_path, index=False, header=False)
+        print(f"Rewritten file with distinct records: {csv_file_path}")
+    else:
+        print(f"File does not exist: {csv_file_path}")
