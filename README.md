@@ -76,24 +76,25 @@
     
 ---
 ### Một số ví dụ
-| Image | Label                           | Image | Label                                     |
-|-------|---------------------------------|-------|-------------------------------------------|
-|<img src="img/attend_a_meeting.jpg" width="160px">       | "attending a meeting",          |<img src="img/image.png" width="160px">| "preparing some food",                    |
-|<img src="img/attend_presentation.jpg" width="160px">       | "attending a presentation",     |<img src="img/image-1.png" width="160px">       | "reading documents",                      |
-|<img src="img/image-2.png" width="160px">       | "grooming",                     |<img src="img/image-3.png" width="160px">       | "riding a bike or motorbike",             |
-|<img src="img/image-4.png" width="160px">       | "doing office work",            |<img src="img/20191130_195043_000.jpg" width="160px">       | "shopping",                               |
-|<img src="img/image-5.png" width="160px">       | "doing the cleaning",           |<img src="img/image-6.png" width="160px">       | "taking a bus",                           |
-|<img src="img/image-7.png" width="160px">       | "doing the laundry",            |<img src="img/case_1a_takingphoto.png" width="160px">       | "taking a photo",                         |
-|<img src="img/image-8.png" width="160px">       | "driving",                      |<img src="img/image-9.png" width="160px">       | "taking a plane",                         |
-|<img src="img/image-10.png" width="160px">       | "eating",                       | <img src="img/image-11.png" width="160px">      | "taking a train",                         |
-|<img src="img/image-12.png" width="160px">       | "personal hygiene",             |<img src="img/image-13.png" width="160px">       | "taking out the trash",                   |
-|<img src="img/image-14.png" width="160px"> <img src="img/image-15.png" width="160px">      | "having a casual conversation", |<img src="img/20191031_135325_000.jpg" width="160px">       | "using a computer",                       |
-|<img src="img/image-16.png" width="160px">       | "having a drink",               |<img src="img/20191031_135741_000.jpg" width="160px">       | "using a mobile device",                  |
-|<img src="img/image-17.png" width="160px">       | "organizing clothes",           |<img src="img/image-18.png" width="160px">       | "walking indoor",                         |
-|<img src="img/image-19.png" width="160px">       | "lying",                        |<img src="img/image-20.png" width="160px">       | "walking outdoor",                        |
-|<img src="img/image-21.png" width="160px">       | "playing music instruments",    |<img src="img/clean_kitchen.jpg" width="160px">       | "cleaning kitchenware",                   |
-|<img src="img/image-22.png" width="160px">       | "NO ACTIVITY"                                |<img src="img/image-23.png" width="160px">       | "watching tv or digital display devices", |
-|       |                                 |<img src="img/image-24.png" width="160px">       | "writing",                                |
+| Image                                                                                 | Label                                 | Image                                                 | Label                                          |
+|---------------------------------------------------------------------------------------|---------------------------------------|-------------------------------------------------------|------------------------------------------------|
+| <img src="img/attend_a_meeting.jpg" width="160px">                                    | "attending a meeting",                |<img src="img/image-21.png" width="160px">                  | "playing music instruments",                   |
+| <img src="img/attend_presentation.jpg" width="160px">                                 |     "attending a presentation",       | <img src="img/image.png" width="160px">           |     "preparing some food",                     |
+| <img src="img/clean_kitchen.jpg" width="160px">                                              |     "cleaning kitchenware",           | <img src="img/image-1.png" width="160px">              |     "reading documents",                       |
+| <img src="img/image-4.png" width="160px">                                             |     "doing office work",              | <img src="img/image-3.png" width="160px">  |     "riding a bike or motorbike",              |
+| <img src="img/image-5.png" width="160px">                                             |     "doing the cleaning",             | <img src="img/20191130_195043_000.jpg" width="160px">             |     "shopping",                                |
+| <img src="img/image-7.png" width="160px">                                             |     "doing the laundry",              | <img src="img/image-6.png" width="160px"> |     "taking a bus",                            |
+| <img src="img/image-8.png" width="160px">                                             |     "driving",                        | <img src="img/case_1a_takingphoto.png" width="160px">         |     "taking a photo",                          |
+| <img src="img/image-10.png" width="160px">                                            |     "eating",                         | <img src="img/image-9.png" width="160px">                |     "taking a plane",                          |
+| <img src="img/image-29.png" width="160px">                                         |     "fixing something",               | <img src="img/image-11.png" width="160px">            |     "taking a train",                          |
+|<img src="img/image-2.png" width="160px">  |     "grooming",                       | <img src="img/image-13.png" width="160px"> |     "taking out the trash",                    |
+| <img src="img/image-14.png" width="160px"> <img src="img/image-15.png" width="160px">                                           |     "having a casual conversation",   | <img src="img/20191031_135325_000.jpg" width="160px"> |     "using a computer",                        |
+| <img src="img/image-16.png" width="160px">                                            |     "having a drink",                 | <img src="img/20191031_135741_000.jpg" width="160px">          |     "using a mobile device",                   |
+| <img src="img/image-19.png" width="160px">                                            |     "lying",                          | <img src="img/image-18.png" width="160px">             |     "walking indoor",                          |
+|<img src="img/image-30.png" width="160px">                                         |     "making financial transactions",  | <img src="img/image-20.png" width="160px">       |     "walking outdoor",                         |
+| <img src="img/image-22.png" width="160px">                                            |     "NO ACTIVITY",                    | <img src="img/image-23.png" width="160px">            |     "watching tv or digital display devices",  |
+|<img src="img/image-17.png" width="160px"> |     "organizing clothes",             | <img src="img/image-24.png" width="160px">            |     "writing"                                  |
+| <img src="img/image-12.png" width="160px">  | "personal hygiene",  |                                                       |                                                |
 
 
 ---
@@ -120,5 +121,6 @@
 | 5c. Trong lớp học/phòng họp/... không thấy slide trình chiếu, **mọi người có vị trí ngang nhau**, giống một cuộc thảo luận | <img src="img/image-26.png" width="160px"> | attending a meeting  | Thảo luận đơn thuần dùng lời nói để trình bày |
 | 6a. Bàn làm việc có máy tính đang **tắt**. Góc nhìn **không** tập trung vào máy tính.  | <img src="img/image-28.png" width="160px"> | doing office work  |  |
 | 6b. Bàn làm việc có máy tính đang **tắt**. Góc nhìn tập trung vào máy tính. | <img src="img/image-27.png" width="160px"> | using a computer  | |
+| 7. Đứng ở quầy thu ngân, rút tiền ở ATM, thông báo chuyển khoản trên điện thoại,... | | making financial ransactions  | |
 
 ---
