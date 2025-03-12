@@ -123,6 +123,6 @@
 | 5c. Trong lớp học/phòng họp/... không thấy slide trình chiếu, **mọi người có vị trí ngang nhau**, giống một cuộc thảo luận | <img src="img/image-26.png" width="160px"> | attending a meeting  | Thảo luận đơn thuần dùng lời nói để trình bày |
 | 6a. Bàn làm việc có máy tính đang **tắt**. Góc nhìn **không** tập trung vào máy tính.  | <img src="img/image-28.png" width="160px"> | doing office work  |  |
 | 6b. Bàn làm việc có máy tính đang **tắt**. Góc nhìn tập trung vào máy tính. | <img src="img/image-27.png" width="160px"> | using a computer  | |
-| 7. Đứng ở quầy thu ngân, rút tiền ở ATM, thông báo chuyển khoản trên điện thoại,... | | making financial ransactions  | |
+| 7. Đứng ở quầy thu ngân, rút tiền ở ATM, thông báo chuyển khoản trên điện thoại,... | | making financial transactions  | |
 
 ---
