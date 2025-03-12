@@ -16,6 +16,7 @@
 - **Link dataset**: link riêng tư, liên hệ chủ project để tải về.
 
 ### Cấu trúc thư mục ảnh:
+
 ```
 201901/
   01/
@@ -33,12 +34,10 @@
 202006/
 ```
 
-**Danh sách labels**: Xem ở `unique_new_labels.json`. Người dùng có thể làm quen với các label (và vị trí của chúng trong app) để quá trình dán nhãn diễn ra nhanh chóng.
-
 ---
 
 ## Hướng dẫn cài đặt
-
+0. Tải toàn bộ ảnh và các file CSV về máy (Liên hệ chủ repo lấy link).
 1. `git clone https://github.com/khanghdc98/annotation_app.git`
 2. `git checkout verify-app`
 3. `cd image-review-app`
@@ -53,11 +52,13 @@
 6. `py gui.py`
 7. Chọn SELECT CSV. Chọn tiếp vào file CSV được phân công
 
+---
 
 ## Mô tả
 - Sau khi load CSV thành công, các bạn sẽ thấy câu hỏi `Is <tên label> the main activity of this image?`. Các bạn chỉ cần check bằng cách bấm `APPROVE` (hotkey: phím A) hoặc `DECLINE` (hotkey: phím D).
 - Nếu muốn quay lại record trước đó thì bấm nút `BACK` và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**
 - Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
+
 
 ### Một số quy tắc:
 - Theo dòng thời gian, hành động A đang diễn ra lâu dài, liên tục thì hành động B xuất hiện trong một giai đoạn ngắn, song song với giai đoạn A => Chỉ ghi nhận main action là hành động B.
