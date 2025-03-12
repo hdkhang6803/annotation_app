@@ -2,7 +2,7 @@ import os
 import csv
 
 # 📂 Folder containing the CSV files
-INPUT_FOLDER = "E:/LSCDATA/Ground truth LSC"  # Change this to your folder path
+INPUT_FOLDER = "E:/LSCDATA/golden_corpus/suggest_1_0_800000"  # Change this to your folder path
 OUTPUT_FILE = "record_counts.csv"  # Output file to store counts
 
 def count_records_in_csv(file_path):
@@ -10,7 +10,7 @@ def count_records_in_csv(file_path):
     try:
         with open(file_path, "r", newline="", encoding="utf-8") as f:
             reader = csv.reader(f)
-            return sum(1 for _ in reader) - 1  # Subtract 1 to exclude the header
+            return sum(1 for _ in reader)
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
         return 0

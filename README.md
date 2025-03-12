@@ -46,16 +46,18 @@
   ```
   IMAGE_DIR="E:/LSCDATA/keyframes" # (thư mục chứa toàn bộ ảnh)
   OUTPUT_DIR="E:/LSCDATA/golden_corpus/ver2" # (thư mục chứa output)
-  TEMP_DIR="E:/LSCDATA/golden_corpus/ver2/temp" # (thư mục tạm trong )
+  TEMP_DIR="E:/LSCDATA/golden_corpus/ver2/temp" # (thư mục tạm trong folder output)
   ORIGIN_GOLDEN_CORPUS="E:/LSCDATA/golden_corpus/ver1" # optional
   ```
-4. `py gui.py`
-5. Chọn SELECT CSV. Chọn tiếp vào file CSV được phân công
+5. `pip install -r requirements.txt`
+6. `py gui.py`
+7. Chọn SELECT CSV. Chọn tiếp vào file CSV được phân công
 
 
 ## Mô tả
 - Sau khi load CSV thành công, các bạn sẽ thấy câu hỏi `Is <tên label> the main activity of this image?`. Các bạn chỉ cần check bằng cách bấm `APPROVE` (hotkey: phím A) hoặc `DECLINE` (hotkey: phím D).
 - Nếu muốn quay lại record trước đó thì bấm nút `BACK` và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**
+- Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
 
 ### Một số quy tắc:
 - Theo dòng thời gian, hành động A đang diễn ra lâu dài, liên tục thì hành động B xuất hiện trong một giai đoạn ngắn, song song với giai đoạn A => Chỉ ghi nhận main action là hành động B.
