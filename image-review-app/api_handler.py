@@ -1,6 +1,6 @@
 import requests
 
-API_URL = "http://34.97.0.203:8001/explore/explore_neighbor_images"
+API_URL = "http://server.selab.edu.vn:20711/explore/explore_neighbor_images"
 
 def get_neighbors(image_url, span=6):
     """Fetches neighboring images from the API."""
