@@ -12,7 +12,7 @@
 - Được thu thập từ một giáo sư người Ireland trong thời gian từ 01/2019 - 06/2020.
 - Gồm dữ liệu ảnh của ~530 ngày, mỗi ngày khoảng 1000-2000 hình ảnh.
 - Tổng số lượng ảnh: ~725k.
-- Kích thước bộ dữ liệu: ~50GB.
+- Kích thước bộ dữ liệu: ~10GB (đã downscale).
 - **Link dataset**: link riêng tư, liên hệ chủ project để tải về.
 
 ### Cấu trúc thư mục ảnh:
