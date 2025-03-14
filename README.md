@@ -38,7 +38,7 @@
 
 ## Hướng dẫn cài đặt
 0. Tải toàn bộ ảnh và các file CSV về máy (Liên hệ chủ repo lấy link).
-1. `git clone https://github.com/khanghdc98/annotation_app.git`
+1. `git clone https://github.com/hdkhang6803/annotation_app.git`
 2. `git checkout verify-app`
 3. `cd image-review-app`
 4. Tạo file .env trong thư mục image-review-app:
