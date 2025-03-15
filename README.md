@@ -56,8 +56,9 @@
 
 ## Mô tả
 - Sau khi load CSV thành công, các bạn sẽ thấy câu hỏi `Is <tên label> the main activity of this image?`. Các bạn chỉ cần check bằng cách bấm `APPROVE` (hotkey: phím A) hoặc `DECLINE` (hotkey: phím D).
-- Nếu muốn quay lại record trước đó thì bấm nút `BACK` và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**
-- Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
+- Nếu muốn quay lại record trước đó thì bấm nút `BACK` (hotkey: Left) và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**. Nút `NEXT` (hotkey: Right)
+- Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` (hotkey: S) để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
+
 
 
 ### Một số quy tắc:
