@@ -4,6 +4,9 @@ from config import TEMP_DIR,ORIGIN_GOLDEN_CORPUS, OUTPUT_DIR
 
 def merge_csv_files():
     """Merges <action_label>.csv with temp_golden_corpus_for_<action_label>.csv files in a given folder."""
+    if not os.path.exists(ORIGIN_GOLDEN_CORPUS):
+        print(f"Directory does not exist: {ORIGIN_GOLDEN_CORPUS}")
+        return
     csv_files = [f for f in os.listdir(TEMP_DIR) if f.endswith(".csv")]
     csv_files += [f for f in os.listdir(ORIGIN_GOLDEN_CORPUS) if f.endswith(".csv")]
 
