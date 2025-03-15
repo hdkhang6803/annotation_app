@@ -90,6 +90,9 @@ class ImageReviewApp:
         # Bind "A" key to approve and "D" key to decline
         self.root.bind("<a>", lambda event: self.approve_image())
         self.root.bind("<d>", lambda event: self.skip_image())
+        self.root.bind("<Left>", lambda event: self.load_previous())
+        self.root.bind("<Right>", lambda event: self.load_next())
+        self.root.bind("<s>", lambda event: self.load_neighbors())
 
 
     def select_file(self):
