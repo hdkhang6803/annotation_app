@@ -16,4 +16,5 @@ total_images = 0  # Total images in directory
 base_path = ""
 have_base_path = False
 button_per_row=10
+button_per_col=4
 IMAGE_DIR = os.getenv("IMAGE_DIR", "")

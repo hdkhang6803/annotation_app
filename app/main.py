@@ -7,7 +7,7 @@ from tkinter import filedialog, messagebox, Canvas, Frame, Scrollbar, Entry, Lab
 from PIL import Image, ImageTk
 from rest_client import RestClient
 from utils import get_path_for_vector_db, get_base_path
-from constant import image_list, current_index, image_dir, output_dir, output_csv, label_data, csv_columns, annotated_images, total_images, base_path, have_base_path, label_file, button_per_row, IMAGE_DIR
+from constant import image_list, current_index, image_dir, output_dir, output_csv, label_data, csv_columns, annotated_images, total_images, base_path, have_base_path, label_file, button_per_row, IMAGE_DIR, button_per_col
 
 
 api_client = RestClient("http://server.selab.edu.vn:20715")
@@ -17,6 +17,8 @@ temp_all_images = []
 current_video_id = ""
 no_return_records = 10  # Default value
 image_extension = ".webp"
+temp_index = -1
+index_path = []
 
 if os.path.exists(IMAGE_DIR):
     for root_dir, _, files in os.walk(IMAGE_DIR):
@@ -78,7 +80,6 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
         selected_images.clear()  # Clear selected images set
         update_grid()  # Refresh the UI
 
-        messagebox.showinfo("Success", "All propagated records have been removed.")
         clear_label_boxes()
         dialog.destroy()
         try:
@@ -186,8 +187,9 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
     dialog = tk.Toplevel(root)
     dialog.title("Review Propagated Records")
     dialog.geometry("500x800")
-    dialog.transient(root)
-    dialog.grab_set()
+    dialog.transient(root)  # Keep it on top of the main window
+    dialog.grab_set()  # Make it modal (force interaction inside this window)
+    dialog.focus_force()  # Auto-focus the dialog
 
     tk.Label(dialog, text="Click images to select/remove. Scroll to navigate.", font=("Arial", 12)).pack(pady=5)
 
@@ -214,6 +216,8 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
     update_grid()
 
     dialog.bind("<MouseWheel>", on_mouse_scroll)
+    dialog.bind("a", lambda event: submit_records())  # Bind 'a' key to submit_records
+    dialog.bind("d", lambda event: remove_all())  
 
     btn_frame = tk.Frame(dialog)
     btn_frame.pack(fill="x", pady=10)
@@ -221,43 +225,15 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
     remove_btn = tk.Button(btn_frame, text="Remove Selected", command=remove_selected, bg="red", fg="white", width=15, height=2)
     remove_btn.pack(side="left", padx=5)
 
-    remove_all_btn = tk.Button(btn_frame, text="Remove All", command=remove_all, bg="orange", fg="white", width=15, height=2)
+    remove_all_btn = tk.Button(btn_frame, text="Decline All", command=remove_all, bg="orange", fg="white", width=15, height=2)
     remove_all_btn.pack(side="left", padx=5)
 
-    submit_btn = tk.Button(btn_frame, text="Submit", command=submit_records, bg="green", fg="white", width=15, height=2)
+    submit_btn = tk.Button(btn_frame, text="Approve", command=submit_records, bg="green", fg="white", width=15, height=2)
     submit_btn.pack(side="right", padx=5)
 
     dialog.mainloop()
 
 # Show image in GUI with height restriction
-# def show_image(current_index, image_list, img_label, filename_label):
-#     if not image_list:
-#         print("No images to display.")
-#         filename_label.config(text="No images available")
-#         img_label.config(image="")  # Clear the previous image
-#         return img_label, filename_label  # Ensure function always returns values
-
-#     image_path = image_list[current_index]  # Already an absolute path
-#     try:
-#         image = Image.open(image_path)
-#         max_height = 380
-#         img_width, img_height = image.size
-#         scale_factor = max_height / img_height
-#         new_size = (int(img_width * scale_factor), max_height) if img_height > max_height else (img_width, img_height)
-
-#         image = image.resize(new_size, Image.Resampling.LANCZOS)
-#         img = ImageTk.PhotoImage(image)
-#         img_label.config(image=img)
-#         img_label.image = img  # Prevent garbage collection
-#         filename_label.config(text=f"Image: {os.path.basename(image_path)}")
-
-#     except Exception as e:
-#         print(f"Error displaying image {image_path}: {e}")
-#         filename_label.config(text=f"Error loading image: {os.path.basename(image_path)}")
-#         img_label.config(image="")  # Clear image if error occurs
-
-#     return img_label, filename_label  # Always return valid objects
-
 def display_image(canvas, image_path, max_size, row=0, col=0, clear_previous=True):
     """Displays an image in the given canvas, maintaining aspect ratio and optionally clearing previous images."""
     if image_path and os.path.exists(image_path):
@@ -296,7 +272,7 @@ def display_image(canvas, image_path, max_size, row=0, col=0, clear_previous=Tru
         img.close()     
 
 
-def show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label):
+def show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label, count_index=True):
     """Displays the current image along with its previous and next images."""
     
     if not image_list:
@@ -309,12 +285,12 @@ def show_image(current_index, image_list, left_canvas, center_canvas, right_canv
         return
 
     # Get image paths (previous, current, next)
-    global image_extension
+    global image_extension, index_path
     center_image_path = image_list[current_index] + image_extension if current_index < len(temp_all_images) else None
-    
+    if count_index:
+        index_path.append(current_index)
 
-    # Load images into labels
-    display_image(center_canvas, center_image_path, (380, 380))
+    display_image(center_canvas, center_image_path, (350, 350))
 
     # Update filename label
     filename_label.config(text=f"Image: {os.path.basename(center_image_path)}" if center_image_path else "No Image")
@@ -335,24 +311,24 @@ def refresh_label_buttons(label_data, label_inner_frame, label_canvas, save_anno
     sorted_labels = sorted(label_data)
 
     # Button size settings
-    button_width = 12   # Fixed width (characters)
+    button_width = 13   # Fixed width (characters)
     button_height = 2   # Fixed height (lines)
 
     # Create buttons dynamically
     row, col = 0, 0
     for label in sorted_labels:
         btn = tk.Button(
-            label_inner_frame, text=label, font=("Arial", 10), 
+            label_inner_frame, text=label, font=("Arial", 9), 
             wraplength=100,
             command=lambda l=label: save_annotation(l), 
             bg="lightgray", width=button_width, height=button_height
         )
         btn.grid(row=row, column=col, padx=5, pady=5)
 
-        col += 1
-        if col >= button_per_row: 
-            col = 0
-            row += 1
+        row += 1
+        if row >= button_per_col: 
+            row = 0
+            col += 1
 
     # Update scroll region
     label_canvas.update_idletasks()
@@ -369,6 +345,7 @@ def load_labels():
         refresh_label_buttons(label_data, label_inner_frame, label_canvas, save_annotation)
 
 # Load images from directory (only those not in CSV)
+# region Load Images from directory of images
 # def load_images():
 #     global image_list, image_dir, current_index, annotated_images, total_images
 #     image_dir = filedialog.askdirectory(title="Select Image Directory")
@@ -434,7 +411,7 @@ def load_labels():
 #     update_progress_label()  # Update progress count
 #     global img_label, filename_label
 #     img_label, filename_label = show_image(current_index, image_list, prev_img_label, img_label, next_img_label, filename_label) or (img_label, filename_label)
-
+# endregion
 def load_images():
     global image_list, current_index, annotated_images, total_images
     
@@ -708,6 +685,7 @@ def move_to_next_image():
         messagebox.showinfo("Done", "All images labeled!")
         root.quit()
 
+
 # Exit function
 def on_exit(root):
     """Ensures all Tkinter windows close properly."""
@@ -752,29 +730,109 @@ def load_neighbors():
     for i, img_url in enumerate(front_neighbors[:GRID_ROWS * GRID_COLS]):
         full_path = os.path.join(base_path, img_url + image_extension).replace("\\", "/")
         row, col = divmod(i, GRID_COLS)  # Convert index to grid row/col
-        display_image(left_canvas, full_path, (140, 140), row, col, clear_previous=False)
+        display_image(left_canvas, full_path, (140, 130), row, col, clear_previous=False)
 
     # Display Right Neighbors (After)
     for i, img_url in enumerate(back_neighbors[:GRID_ROWS * GRID_COLS]):
         full_path = os.path.join(base_path, img_url + image_extension).replace("\\", "/")
         row, col = divmod(i, GRID_COLS)  # Convert index to grid row/col
-        display_image(right_canvas, full_path, (140, 140), row, col, clear_previous=False)
+        display_image(right_canvas, full_path, (140, 130), row, col, clear_previous=False)
 
     print(f"Neighbors loaded: {len(response)}")
 
+def go_back():
+    global temp_index, current_index
+    if temp_index == -1:
+        temp_index = current_index
+        current_button.config(bg="green", highlightbackground="green", activebackground="green")
+
+    current_index = index_path[max(index_path.index(current_index) - 1, 0)]
+    print(f"back Current index: {current_index}, Temp index: {temp_index}, index_path: {index_path}")
+    if current_index >= 0:
+        global filename_label
+        img_path = image_list[current_index]
+        img_path = get_path_for_vector_db(img_path)
+        img_path = os.path.splitext(img_path)[0].replace("\\", "/")
+
+        global left_canvas, right_canvas
+        filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label, count_index=False) or (filename_label)
+        # Clear left & right panels (neighbors are loaded separately)
+        
+        for widget in left_canvas.winfo_children():
+            widget.destroy()
+        for widget in right_canvas.winfo_children():
+            widget.destroy()
+        update_progress_label()
+    else:
+        messagebox.showinfo("Done", "No previous images!")
+        current_index = 0
+
+def go_next():
+    global temp_index, current_index
+    if temp_index == -1:
+        temp_index = current_index
+        current_button.config(bg="green", highlightbackground="green", activebackground="green")
+    current_index = index_path[min(index_path.index(current_index) + 1, len(index_path) - 1)]
+    print(f"next Current index: {current_index}, Temp index: {temp_index}, index_path: {index_path}")
+    if current_index < len(image_list):
+        global filename_label
+        img_path = image_list[current_index]
+        img_path = get_path_for_vector_db(img_path)
+        img_path = os.path.splitext(img_path)[0].replace("\\", "/")
+
+        global left_canvas, right_canvas
+        filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label, count_index=False) or (filename_label)
+        # Clear left & right panels (neighbors are loaded separately)
+        
+        for widget in left_canvas.winfo_children():
+            widget.destroy()
+        for widget in right_canvas.winfo_children():
+            widget.destroy()
+        update_progress_label()
+    
+
+def to_current():
+    global temp_index, current_index
+    if temp_index == -1:
+        return
+    current_button.config(bg="SystemButtonFace")
+    current_index = temp_index
+    temp_index = -1
+    global left_canvas, right_canvas, center_canvas, filename_label
+    filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label, False) or (filename_label)
+    # Clear left & right panels (neighbors are loaded separately)
+    
+    for widget in left_canvas.winfo_children():
+        widget.destroy()
+    for widget in right_canvas.winfo_children():
+        widget.destroy()
+    update_progress_label()
+        
+
 # Tkinter GUI Setup
+
 root = tk.Tk()
 root.title("Image Annotation Tool")
-root.attributes('-fullscreen', True)  # Full-screen mode
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+window_width = int(screen_width * 0.96)
+window_height = int(screen_height * 0.9)
+
+x_position = 0
+y_position = 0
+
+root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
 
 # Top Menu Buttons
 top_frame = tk.Frame(root)
 top_frame.pack(fill="x", pady=1)
 
 # tk.Button(top_frame, text="Load Labels", font=("Arial", 12), command=load_labels).pack(side="left", padx=10)
-tk.Button(top_frame, text="Load Images", font=("Arial", 12), command=load_images).pack(side="left", padx=10)
 # tk.Button(top_frame, text="Set Output Folder", font=("Arial", 12), command=select_output_folder).pack(side="left", padx=10)
-tk.Button(top_frame, text="Exit", font=("Arial", 12), command=lambda: on_exit(root), fg="white", bg="red").pack(side="right", padx=10)
+# tk.Button(top_frame, text="Exit", font=("Arial", 12), command=lambda: on_exit(root), fg="white", bg="red").pack(side="right", padx=10)
 
 # Loading Label
 loading_label = tk.Label(root, text="", font=("Arial", 12))
@@ -789,9 +847,10 @@ csv_frame.pack(fill="x", padx=10)
 # tk.Button(csv_frame, text="Set", font=("Arial", 12), command=set_csv_filename).pack(side="left", padx=5)
 
 # Slider for controlling no_return_records
+tk.Button(csv_frame, text="Load Images", font=("Arial", 9), command=load_images).pack(side="left", padx=10)
 Label(csv_frame, text="Returned Records: ", font=("Arial", 8)).pack(side="left", padx=5)
 slider = tk.Scale(csv_frame, from_=10, to=30, orient="horizontal", length=200,
-                  font=("Arial", 10), command=update_no_return_records)
+                  font=("Arial", 9), command=update_no_return_records)
 slider.pack(side="left", padx=10)
 slider.set(no_return_records)  # Set initial value to default
 
@@ -799,19 +858,28 @@ slider.set(no_return_records)  # Set initial value to default
 label_box_frame = tk.Frame(root)
 label_box_frame.pack(pady=5)
 
-Label(label_box_frame, text="Selected Labels:", font=("Arial", 12)).grid(row=0, column=0, columnspan=2)
+Label(label_box_frame, text="Selected Labels:", font=("Arial", 9)).grid(row=0, column=0, columnspan=2)
 
-label_box_1 = tk.Entry(label_box_frame, font=("Arial", 12), width=20, state="readonly")
-label_box_1.grid(row=1, column=0, padx=5)
+label_box_1 = tk.Entry(label_box_frame, font=("Arial", 9), width=20, state="readonly")
+label_box_1.grid(row=0, column=2)
 
 # label_box_2 = tk.Entry(label_box_frame, font=("Arial", 12), width=20, state="readonly")
 # label_box_2.grid(row=1, column=1, padx=5)
 
-clear_button = tk.Button(label_box_frame, text="Clear Labels", font=("Arial", 12), command=clear_label_boxes)
-clear_button.grid(row=1, column=2, padx=5)
+clear_button = tk.Button(label_box_frame, text="Clear Labels", font=("Arial", 9), command=clear_label_boxes)
+clear_button.grid(row=0, column=3, padx=5)
 
-neighbor_button = tk.Button(label_box_frame, text="Load Neighbors", font=("Arial", 12), command=load_neighbors)
-neighbor_button.grid(row=1, column=3, padx=5)
+neighbor_button = tk.Button(label_box_frame, text="Load Neighbors", font=("Arial", 9), command=load_neighbors)
+neighbor_button.grid(row=0, column=4, padx=5)
+
+back_button = tk.Button(label_box_frame, text="BACK", font=("Arial", 9), bg="yellow", command=go_back)
+back_button.grid(row=0, column=5, padx=5)
+
+current_button = tk.Button(label_box_frame, text="TO CURRENT", font=("Arial", 9), command=to_current)
+current_button.grid(row=0, column=6, padx=5)
+
+next_button = tk.Button(label_box_frame, text="NEXT", font=("Arial", 9), bg="yellow", command=go_next)
+next_button.grid(row=0, column=7, padx=5)
 
  # **Main Layout Frame**
 main_frame = tk.Frame(root, height=500)
@@ -841,7 +909,7 @@ right_canvas.pack(expand=True, fill="both")
 
 
 # Filename Label
-filename_label = tk.Label(root, text="", font=("Arial", 14))
+filename_label = tk.Label(root, text="", font=("Arial", 10))
 filename_label.pack(pady=5)
 
 
@@ -849,17 +917,17 @@ filename_label.pack(pady=5)
 progress_frame = tk.Frame(root)
 progress_frame.pack(pady=5)
 
-progress_label = tk.Label(progress_frame, text="Remaining items: 0", font=("Arial", 12))
+progress_label = tk.Label(progress_frame, text="Remaining items: 0", font=("Arial", 8))
 progress_label.pack(side="left", padx=5)
 
-total_label = tk.Label(progress_frame, text="Total items: 0", font=("Arial", 12))
+total_label = tk.Label(progress_frame, text="Total items: 0", font=("Arial", 8))
 total_label.pack(side="left", padx=5)
 
 # Scrollable Label Selection Area
-label_container = tk.Frame(root)
-label_container.pack(fill="x", padx=10, pady=5)
+label_container = tk.Frame(root, width=800)
+label_container.pack(padx=10, pady=5)
 
-label_canvas = Canvas(label_container, height=300)
+label_canvas = Canvas(label_container, height=300, width=1000)
 label_scrollbar = Scrollbar(label_container, orient="vertical", command=label_canvas.yview)
 
 label_inner_frame = Frame(label_canvas)

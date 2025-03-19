@@ -54,9 +54,10 @@
 
 ## Mô tả
 - Sau khi load CSV thành công, các bạn sẽ thấy ảnh được hiển thị. Các bạn tiến hành chọn vào label tương ứng với ảnh đó.
-- Sau khi chọn xong label, các bạn **đợi 1 lúc**, sẽ có các ảnh tương tự ảnh đã label gửi về từ server. Các bạn kiểm tra kĩ xem các ảnh đó có cùng label với ảnh trước đó không, nếu có thì bấm `Submit`, nếu toàn bộ đều sai label thì bấm `Remove all`, nếu có vài ảnh sai label thì select các ảnh đó và bấm `Remove selected`. Có thể chỉnh `Returned Records` trên màn hình giao diện để kiếm soát số lượng ảnh similar trả về từ server.
-- Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` (hotkey: S) để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
-- Trong trường hợp các bạn lỡ label sai một nhóm ảnh nào đó, hãy tắt app, vào file annotations.csv xóa các record sai (ảnh gốc + ảnh similar từ server) và load app lại như bình thường. **Nên hạn chế label sai vì thao tác này tốn nhiều thời gian.**
+- Sau khi chọn xong label, các bạn **đợi 1 lúc**, sẽ có các ảnh tương tự ảnh đã label gửi về từ server. Các bạn kiểm tra kĩ xem các ảnh đó có cùng label với ảnh trước đó không, nếu có thì bấm `Approve` (hotkey: a), nếu toàn bộ đều sai label thì bấm `Decline all` (hotkey: d), nếu có vài ảnh sai label thì select các ảnh đó và bấm `Remove selected`. Có thể chỉnh `Returned Records` trên màn hình giao diện để kiếm soát số lượng ảnh similar trả về từ server.
+- Các bạn có thể bấm `LOAD NEIGHBORS` (hotkey: s) để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
+- Trong trường hợp các bạn lỡ label sai một ảnh, hãy dùng nút `BACK` để quay lại record sai và nhớ đường dẫn của nó (gọi là URL_1), đồng thời nhớ cả đường dẫn của ảnh phía sau ảnh label sai (URL2) bằng nút `NEXT`. Sau đó hãy tắt app, vào file annotations.csv xóa các record sai (ảnh gốc + ảnh similar từ server, i.e. \[URL_1, URL_2\)) và load app lại như bình thường. **Nên hạn chế label sai vì thao tác này tốn nhiều thời gian.**
+- Mọi thao tác `BACK` hoặc `NEXT` đều phải có thêm thao tác bấm nút `TO_CURRENT` để tiếp tục dán nhãn như bình thường.
 
 
 
