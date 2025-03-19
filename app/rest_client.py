@@ -3,6 +3,7 @@ import os
 from constant import base_path
 from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from .env file
+from utils import get_path_for_vector_db
 
 class RestClient:
     _instance = None  # Private class attribute to store the single instance
@@ -18,7 +19,7 @@ class RestClient:
         return cls._instance
 
     def get_similars(self, image_name, no_return_records):
-        url = f"{self.base_url.replace('8004', '8001')}/get_similar"
+        url = f"{self.base_url.replace('20715', '20714')}/get_similar"
         payload = {"image_id": image_name, "no_return_records": no_return_records} 
 
         response = requests.get(url, params=payload, timeout=5)
@@ -80,4 +81,19 @@ class RestClient:
         else:
             print(response.text)
             return False
+
+    def get_neighbors(self, image_url, span=6):
+        """Fetches neighboring images from the API."""
+        image_url = get_path_for_vector_db(image_url)
+        payload = {"image_url": image_url, "span": span}
+        url = f"{self.base_url.replace('20715', '20711')}/explore/explore_neighbor_images"
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            neighbors = response.json().get("response", [])
+            final_res = []
+            for neighbor in neighbors:
+                neighbor = neighbor["img_link"].replace("http://127.0.0.1:8000/", "").replace(".jpg", "")
+                final_res.append(neighbor)
+            return final_res
+        return []
     

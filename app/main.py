@@ -7,15 +7,29 @@ from tkinter import filedialog, messagebox, Canvas, Frame, Scrollbar, Entry, Lab
 from PIL import Image, ImageTk
 from rest_client import RestClient
 from utils import get_path_for_vector_db, get_base_path
-from constant import image_list, current_index, image_dir, output_dir, output_csv, label_data, csv_columns, annotated_images, total_images, base_path, have_base_path, label_file, button_per_row
+from constant import image_list, current_index, image_dir, output_dir, output_csv, label_data, csv_columns, annotated_images, total_images, base_path, have_base_path, label_file, button_per_row, IMAGE_DIR
 
 
-api_client = RestClient("http://34.97.0.203:8004")
+api_client = RestClient("http://server.selab.edu.vn:20715")
 
 THUMBNAIL_SIZE = (200, 150)  # Thumbnail size
 temp_all_images = []
 current_video_id = ""
 no_return_records = 10  # Default value
+image_extension = ".webp"
+
+if os.path.exists(IMAGE_DIR):
+    for root_dir, _, files in os.walk(IMAGE_DIR):
+        for file in files:
+            if file.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+                image_extension = os.path.splitext(file)[1]
+                print(f"Image extension set to: {image_extension}")
+                break
+        else:
+            continue
+        break
+else:
+    print(f"IMAGE_DIR does not exist: {IMAGE_DIR}")
 
 def show_propagated_records_dialog(root, base_path, propagated_records, label1, label2):
     """
@@ -125,12 +139,8 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
         for img_path in propagated_records:
             try:
                 # Find the real image path with extension
-                img_full_path = None
-                for ext in [".png", ".jpg", ".jpeg"]:
-                    potential_path = os.path.join(base_path, img_path + ext).replace("\\", "/")
-                    if os.path.exists(potential_path):
-                        img_full_path = potential_path
-                        break
+                global image_extension
+                img_full_path = os.path.join(base_path, img_path + image_extension).replace("\\", "/")
 
                 if not img_full_path:
                     print(f"Image file for {img_path} not found with any expected extension.")
@@ -248,7 +258,45 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
 #         img_label.config(image="")  # Clear image if error occurs
 
 #     return img_label, filename_label  # Always return valid objects
-def show_image(current_index, image_list, prev_img_label, img_label, next_img_label, filename_label):
+
+def display_image(canvas, image_path, max_size, row=0, col=0, clear_previous=True):
+    """Displays an image in the given canvas, maintaining aspect ratio and optionally clearing previous images."""
+    if image_path and os.path.exists(image_path):
+        # ❗ Clear previous image **only if specified**
+        if clear_previous:
+            for widget in canvas.winfo_children():
+                widget.destroy()
+
+        # Open the image
+        img = Image.open(image_path)
+        max_width, max_height = max_size
+
+        # Get original width and height
+        orig_width, orig_height = img.size
+
+        # Compute scale ratio for both dimensions
+        width_ratio = max_width / orig_width
+        height_ratio = max_height / orig_height
+
+        # Use the smallest ratio to fit within both constraints
+        scale_ratio = min(width_ratio, height_ratio)
+        new_width = int(orig_width * scale_ratio)
+        new_height = int(orig_height * scale_ratio)
+
+        # Resize while maintaining aspect ratio
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        img_tk = ImageTk.PhotoImage(img)
+
+        # Display new image
+        label = tk.Label(canvas, image=img_tk)
+        label.image = img_tk  # Keep reference to prevent garbage collection
+        label.grid(row=row, column=col, padx=5, pady=5)  # Place in grid
+
+        # Close the image to free memory (reduces "Fail to allocate bitmap" issue)
+        img.close()     
+
+
+def show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label):
     """Displays the current image along with its previous and next images."""
     
     if not image_list:
@@ -261,40 +309,19 @@ def show_image(current_index, image_list, prev_img_label, img_label, next_img_la
         return
 
     # Get image paths (previous, current, next)
-    current_image_path = image_list[current_index] if current_index < len(temp_all_images) else None
-    idx_current_in_all_images = temp_all_images.index(current_image_path)
-    prev_image_path = temp_all_images[idx_current_in_all_images - 1] if idx_current_in_all_images > 0 else None
-    next_image_path = temp_all_images[idx_current_in_all_images + 1] if idx_current_in_all_images + 1 < len(temp_all_images) else None
+    global image_extension
+    center_image_path = image_list[current_index] + image_extension if current_index < len(temp_all_images) else None
+    # idx_current_in_all_images = temp_all_images.index(current_image_path)
+    # prev_image_path = temp_all_images[idx_current_in_all_images - 1] if idx_current_in_all_images > 0 else None
+    # next_image_path = temp_all_images[idx_current_in_all_images + 1] if idx_current_in_all_images + 1 < len(temp_all_images) else None
 
-    def load_thumbnail(image_path, label_widget, max_height=380):
-        """Loads and resizes an image, setting it to the given label widget."""
-        if image_path and os.path.exists(image_path):
-            try:
-                image = Image.open(image_path)
-                img_width, img_height = image.size
-                
-                # Resize while maintaining aspect ratio
-                scale_factor = max_height / img_height
-                new_size = (int(img_width * scale_factor), max_height) if img_height > max_height else (img_width, img_height)
-                
-                image = image.resize(new_size, Image.Resampling.LANCZOS)
-                img_tk = ImageTk.PhotoImage(image)
-                
-                label_widget.config(image=img_tk)
-                label_widget.image = img_tk  # Prevent garbage collection
-            except Exception as e:
-                print(f"Error loading image {image_path}: {e}")
-                label_widget.config(image="")  # Reset if error
-        else:
-            label_widget.config(image="")  # Reset if no image found
+    
 
     # Load images into labels
-    load_thumbnail(prev_image_path, prev_img_label, max_height=300)
-    load_thumbnail(current_image_path, img_label, max_height=380)
-    load_thumbnail(next_image_path, next_img_label, max_height=300)
+    display_image(center_canvas, center_image_path, (380, 380))
 
     # Update filename label
-    filename_label.config(text=f"Image: {os.path.basename(current_image_path)}" if current_image_path else "No Image")
+    filename_label.config(text=f"Image: {os.path.basename(center_image_path)}" if center_image_path else "No Image")
 
 
 
@@ -312,7 +339,7 @@ def refresh_label_buttons(label_data, label_inner_frame, label_canvas, save_anno
     sorted_labels = sorted(label_data)
 
     # Button size settings
-    button_width = 11   # Fixed width (characters)
+    button_width = 12   # Fixed width (characters)
     button_height = 2   # Fixed height (lines)
 
     # Create buttons dynamically
@@ -346,11 +373,78 @@ def load_labels():
         refresh_label_buttons(label_data, label_inner_frame, label_canvas, save_annotation)
 
 # Load images from directory (only those not in CSV)
-def load_images():
-    global image_list, image_dir, current_index, annotated_images, total_images
-    image_dir = filedialog.askdirectory(title="Select Image Directory")
+# def load_images():
+#     global image_list, image_dir, current_index, annotated_images, total_images
+#     image_dir = filedialog.askdirectory(title="Select Image Directory")
     
-    if not image_dir:
+#     if not image_dir:
+#         return
+
+#     # Read the existing CSV file and track labeled images
+#     annotated_images = set()
+#     if os.path.exists(output_csv):
+#         try:
+#             df = pd.read_csv(output_csv)
+#             annotated_images = set(df["image_filename"].tolist())  # Ensure column name matches CSV
+#         except Exception as e:
+#             messagebox.showerror("Error", f"Could not read CSV file: {e}")
+
+#     global current_video_id
+#     try:
+#         video_id = "/".join(image_dir.split("/")[-2:])
+#         current_video_id = video_id
+#         if not api_client.init(video_id,[]):
+#             raise Exception("Could not clear session.")
+#     except Exception as e:
+#         print(f"Error clearing session: {e}")
+#         messagebox.showerror("Error", f"Could not clear session: {e}")
+#         return
+
+#     try: 
+#         temp = list(annotated_images)
+#         if not api_client.init(current_video_id, temp):
+#             raise Exception("Could not send annotated data.")
+#     except Exception as e:
+#         print(f"Error sending past data: {e}")
+#         messagebox.showerror("Error", f"Could not load_images: {e}")
+#         return
+
+#     # Get all images (absolute paths) and filter out already annotated ones
+#     all_images = [
+#         os.path.join(image_dir, f) for f in os.listdir(image_dir) 
+#         if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+#     ]
+#     total_images = len(all_images)
+#     print(f"Total images: {total_images}")
+
+#     # Ensure we only load new images
+#     image_list = sorted([img for img in all_images if os.path.splitext(get_path_for_vector_db(img))[0] not in annotated_images])
+#     global temp_all_images
+#     temp_all_images = sorted(all_images)
+#     print(f"New images to label: {len(image_list)}")
+
+#     if not image_list:
+#         messagebox.showinfo("Info", "No new images to label.")
+#         return
+
+#     global have_base_path
+#     if not have_base_path:
+#         global base_path 
+#         base_path = get_base_path(image_list[0])
+#         have_base_path = True
+#         print("Base path: ", base_path)
+
+#     current_index = 0
+#     update_progress_label()  # Update progress count
+#     global img_label, filename_label
+#     img_label, filename_label = show_image(current_index, image_list, prev_img_label, img_label, next_img_label, filename_label) or (img_label, filename_label)
+
+def load_images():
+    global image_list, current_index, annotated_images, total_images
+    
+    # Select CSV file instead of directory
+    csv_file = filedialog.askopenfilename(title="Select CSV File", filetypes=[("CSV Files", "*.csv")])
+    if not csv_file:
         return
 
     # Read the existing CSV file and track labeled images
@@ -362,31 +456,36 @@ def load_images():
         except Exception as e:
             messagebox.showerror("Error", f"Could not read CSV file: {e}")
 
-    global current_video_id
+    # global current_video_id
+    # try:
+    #     video_id = os.path.splitext(os.path.basename(csv_file))[0]  # Use CSV filename as video_id
+    #     current_video_id = video_id
+    #     if not api_client.init(video_id, []):
+    #         raise Exception("Could not clear session.")
+    # except Exception as e:
+    #     print(f"Error clearing session: {e}")
+    #     messagebox.showerror("Error", f"Could not clear session: {e}")
+    #     return
+
+    # try: 
+    #     temp = list(annotated_images)
+    #     if not api_client.init(current_video_id, temp):
+    #         raise Exception("Could not send annotated data.")
+    # except Exception as e:
+    #     print(f"Error sending past data: {e}")
+    #     messagebox.showerror("Error", f"Could not load_images: {e}")
+    #     return
+
+    # Read images from the CSV file
     try:
-        video_id = "/".join(image_dir.split("/")[-2:])
-        current_video_id = video_id
-        if not api_client.init(video_id,[]):
-            raise Exception("Could not clear session.")
+        df = pd.read_csv(csv_file)
+        image_filenames = df.iloc[:, 0].astype(str).tolist()  # Assuming images are in the first column
     except Exception as e:
-        print(f"Error clearing session: {e}")
-        messagebox.showerror("Error", f"Could not clear session: {e}")
+        messagebox.showerror("Error", f"Could not read images from CSV: {e}")
         return
 
-    try: 
-        temp = list(annotated_images)
-        if not api_client.init(current_video_id, temp):
-            raise Exception("Could not send annotated data.")
-    except Exception as e:
-        print(f"Error sending past data: {e}")
-        messagebox.showerror("Error", f"Could not load_images: {e}")
-        return
-
-    # Get all images (absolute paths) and filter out already annotated ones
-    all_images = [
-        os.path.join(image_dir, f) for f in os.listdir(image_dir) 
-        if f.lower().endswith((".png", ".jpg", ".jpeg"))
-    ]
+    # Construct full image paths using IMAGE_DIR
+    all_images = [os.path.join(IMAGE_DIR, img.replace("/", os.sep)) for img in image_filenames]
     total_images = len(all_images)
     print(f"Total images: {total_images}")
 
@@ -409,10 +508,8 @@ def load_images():
 
     current_index = 0
     update_progress_label()  # Update progress count
-    global img_label, filename_label
-    img_label, filename_label = show_image(current_index, image_list, prev_img_label, img_label, next_img_label, filename_label) or (img_label, filename_label)
-
-
+    global filename_label
+    filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (filename_label)
 
 # Select output directory
 def select_output_folder():
@@ -444,7 +541,6 @@ def save_annotation(label1, label2 = "", skip_api_call=False):
         df = pd.DataFrame([[image_name_no_ext, label1, label2]], columns=csv_columns)
         df.to_csv(output_csv, mode="a", header=not os.path.exists(output_csv), index=False)
         annotated_images.add(image_name_no_ext)
-        print(len(annotated_images))
         update_progress_label()
         move_to_next_image()
         return
@@ -475,12 +571,8 @@ def save_annotation(label1, label2 = "", skip_api_call=False):
         save_annotation(label1, label2, skip_api_call=True)  # Resume save_annotation but skip API call
         return
     for record in propagated_records:
-        img_full_path = None
-        for ext in [".png", ".jpg", ".jpeg"]:
-            potential_path = os.path.join(base_path, record + ext).replace("\\", "/")
-            if os.path.exists(potential_path):
-                img_full_path = potential_path
-                break
+        global image_extension
+        img_full_path = os.path.join(base_path, record + image_extension).replace("\\", "/")
 
         if not img_full_path:
             print(f"Image file for {record} not found with any expected extension.")
@@ -521,18 +613,19 @@ def on_label_click(label):
         label_box_1.delete(0, tk.END)
         label_box_1.insert(0, label)
         label_box_1.config(state="readonly")
-    elif not selected_labels[1]:  # Second label slot is empty
-        selected_labels[1] = label
-        label_box_2.config(state="normal")
-        label_box_2.delete(0, tk.END)
-        label_box_2.insert(0, label)
-        label_box_2.config(state="readonly")
-        save_annotation(selected_labels[0], selected_labels[1])  # Save annotation
+        save_annotation(selected_labels[0], selected_labels[1])  # Comment if want to have 2nd label
+    # elif not selected_labels[1]:  # Second label slot is empty
+    #     selected_labels[1] = label
+    #     label_box_2.config(state="normal")
+    #     label_box_2.delete(0, tk.END)
+    #     label_box_2.insert(0, label)
+    #     label_box_2.config(state="readonly")
+    #     save_annotation(selected_labels[0], selected_labels[1])  # Save annotation
 
-def on_tab_press(event):
-    """Triggers save_annotation when Tab is pressed after the first label is chosen."""
-    if selected_labels[0] and not selected_labels[1]:  # If first label is selected but not the second
-        save_annotation(selected_labels[0])
+# def on_tab_press(event):
+#     """Triggers save_annotation when Tab is pressed after the first label is chosen."""
+#     if selected_labels[0] and not selected_labels[1]:  # If first label is selected but not the second
+#         save_annotation(selected_labels[0])
 
 def show_loading():
     """Displays loading message when API request is sent."""
@@ -554,16 +647,16 @@ def clear_label_boxes():
     label_box_1.delete(0, tk.END)
     label_box_1.config(state="readonly")
 
-    label_box_2.config(state="normal")
-    label_box_2.delete(0, tk.END)
-    label_box_2.config(state="readonly")
+    # label_box_2.config(state="normal")
+    # label_box_2.delete(0, tk.END)
+    # label_box_2.config(state="readonly")
 
 def move_to_next_image():
     """Move to the next image in the list."""
     global current_index
     current_index += 1
     if current_index < len(image_list):
-        global img_label, filename_label
+        global filename_label
         img_path = image_list[current_index]
         img_path = get_path_for_vector_db(img_path)
         img_path = os.path.splitext(img_path)[0]
@@ -571,7 +664,7 @@ def move_to_next_image():
             move_to_next_image()
             return
 
-        img_label, filename_label = show_image(current_index, image_list, prev_img_label, img_label, next_img_label, filename_label) or (img_label, filename_label)
+        filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (img_label, filename_label)
     else:
         messagebox.showinfo("Done", "All images labeled!")
         root.quit()
@@ -589,6 +682,46 @@ def update_no_return_records(value):
     global no_return_records
     no_return_records = int(value)
 
+def load_neighbors():
+    """Fetch and display neighboring images in a grid layout."""
+    if not image_list:
+        return
+
+    image_url = image_list[current_index]
+    response = sorted(api_client.get_neighbors(image_url))
+
+    if not response:
+        print("No neighbors found.")
+        return
+
+    middle_index = len(response) // 2
+    front_neighbors = response[:middle_index]
+    back_neighbors = response[middle_index + 1:]
+
+    # Define the grid size (3 rows, 2 columns)
+    GRID_ROWS = 3
+    GRID_COLS = 2
+
+    # ❗ Clear left & right canvas **before** adding images
+    global left_canvas, right_canvas
+    for widget in left_canvas.winfo_children():
+        widget.destroy()
+    for widget in right_canvas.winfo_children():
+        widget.destroy()
+
+    # Display Left Neighbors (Before)
+    for i, img_url in enumerate(front_neighbors[:GRID_ROWS * GRID_COLS]):
+        full_path = os.path.join(base_path, img_url + image_extension).replace("\\", "/")
+        row, col = divmod(i, GRID_COLS)  # Convert index to grid row/col
+        display_image(left_canvas, full_path, (140, 140), row, col, clear_previous=False)
+
+    # Display Right Neighbors (After)
+    for i, img_url in enumerate(back_neighbors[:GRID_ROWS * GRID_COLS]):
+        full_path = os.path.join(base_path, img_url + image_extension).replace("\\", "/")
+        row, col = divmod(i, GRID_COLS)  # Convert index to grid row/col
+        display_image(right_canvas, full_path, (140, 140), row, col, clear_previous=False)
+
+    print(f"Neighbors loaded: {len(response)}")
 
 # Tkinter GUI Setup
 root = tk.Tk()
@@ -599,7 +732,7 @@ root.attributes('-fullscreen', True)  # Full-screen mode
 top_frame = tk.Frame(root)
 top_frame.pack(fill="x", pady=1)
 
-tk.Button(top_frame, text="Load Labels", font=("Arial", 12), command=load_labels).pack(side="left", padx=10)
+# tk.Button(top_frame, text="Load Labels", font=("Arial", 12), command=load_labels).pack(side="left", padx=10)
 tk.Button(top_frame, text="Load Images", font=("Arial", 12), command=load_images).pack(side="left", padx=10)
 # tk.Button(top_frame, text="Set Output Folder", font=("Arial", 12), command=select_output_folder).pack(side="left", padx=10)
 tk.Button(top_frame, text="Exit", font=("Arial", 12), command=lambda: on_exit(root), fg="white", bg="red").pack(side="right", padx=10)
@@ -611,10 +744,10 @@ loading_label = tk.Label(root, text="", font=("Arial", 12))
 csv_frame = tk.Frame(root)
 csv_frame.pack(fill="x", padx=10)
 
-Label(csv_frame, text="Output CSV:", font=("Arial", 12)).pack(side="left", padx=5)
-csv_entry = Entry(csv_frame, font=("Arial", 12), width=30)
-csv_entry.pack(side="left", padx=5)
-tk.Button(csv_frame, text="Set", font=("Arial", 12), command=set_csv_filename).pack(side="left", padx=5)
+# Label(csv_frame, text="Output CSV:", font=("Arial", 12)).pack(side="left", padx=5)
+# csv_entry = Entry(csv_frame, font=("Arial", 12), width=30)
+# csv_entry.pack(side="left", padx=5)
+# tk.Button(csv_frame, text="Set", font=("Arial", 12), command=set_csv_filename).pack(side="left", padx=5)
 
 # Slider for controlling no_return_records
 Label(csv_frame, text="Returned Records: ", font=("Arial", 8)).pack(side="left", padx=5)
@@ -632,33 +765,41 @@ Label(label_box_frame, text="Selected Labels:", font=("Arial", 12)).grid(row=0, 
 label_box_1 = tk.Entry(label_box_frame, font=("Arial", 12), width=20, state="readonly")
 label_box_1.grid(row=1, column=0, padx=5)
 
-label_box_2 = tk.Entry(label_box_frame, font=("Arial", 12), width=20, state="readonly")
-label_box_2.grid(row=1, column=1, padx=5)
+# label_box_2 = tk.Entry(label_box_frame, font=("Arial", 12), width=20, state="readonly")
+# label_box_2.grid(row=1, column=1, padx=5)
 
 clear_button = tk.Button(label_box_frame, text="Clear Labels", font=("Arial", 12), command=clear_label_boxes)
 clear_button.grid(row=1, column=2, padx=5)
 
+neighbor_button = tk.Button(label_box_frame, text="Load Neighbors", font=("Arial", 12), command=load_neighbors)
+neighbor_button.grid(row=1, column=3, padx=5)
 
-# Image Display Area (Three images in a row)
-img_frame = tk.Frame(root,relief="solid", height=120, width=507)
-img_frame.pack(fill="x", padx=20, pady=5)
+ # **Main Layout Frame**
+main_frame = tk.Frame(root)
+main_frame.pack(expand=True, fill="both")
 
-# Ensure equal column expansion
-img_frame.grid_columnconfigure(0, weight=1)
-img_frame.grid_columnconfigure(1, weight=1)
-img_frame.grid_columnconfigure(2, weight=1)
+# **Left Section (Neighbors - Before)**
+left_frame = tk.Frame(main_frame)
+left_frame.pack(side="left", expand=True, fill="both")
 
-# Left Image (Previous Image)
-prev_img_label = tk.Label(img_frame)  
-prev_img_label.grid(row=0, column=0, sticky="nsew", padx=5)
+# **Center Section (Main Image)**
+center_frame = tk.Frame(main_frame)
+center_frame.pack(side="left", expand=True, fill="both")
 
-# Center Image (Current Image)
-img_label = tk.Label(img_frame, bg="red")  
-img_label.grid(row=0, column=1, sticky="nsew", padx=5)
+# **Right Section (Neighbors - After)**
+right_frame = tk.Frame(main_frame)
+right_frame.pack(side="left", expand=True, fill="both")
 
-# Right Image (Next Image)
-next_img_label = tk.Label(img_frame)  
-next_img_label.grid(row=0, column=2, sticky="nsew", padx=5)
+# **Canvases for Images**
+left_canvas = tk.Frame(left_frame)
+left_canvas.pack(expand=True, fill="both")
+
+center_canvas = tk.Canvas(center_frame, width=500, height=500)
+center_canvas.pack(expand=True)
+
+right_canvas = tk.Frame(right_frame)
+right_canvas.pack(expand=True, fill="both")
+
 
 # Filename Label
 filename_label = tk.Label(root, text="", font=("Arial", 14))
@@ -684,7 +825,7 @@ label_canvas.pack(side="left", fill="x", expand=True)
 label_scrollbar.pack(side="right", fill="y")
 
 label_canvas.bind("<MouseWheel>", on_mouse_scroll_label_canvas)
-root.bind("<Tab>", on_tab_press)  # Bind Tab key to trigger save_annotation
+# root.bind("<Tab>", on_tab_press)  # Bind Tab key to trigger save_annotation
 
 # Load labels
 json_file = label_file
