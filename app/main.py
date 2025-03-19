@@ -832,7 +832,7 @@ right_frame.pack(side="left", expand=True, fill="both")
 left_canvas = tk.Frame(left_frame)
 left_canvas.pack(expand=True, fill="both")
 
-center_canvas = tk.Canvas(center_frame, width=500, height=500)
+center_canvas = tk.Canvas(center_frame, width=500, height=350)
 center_canvas.pack(expand=True)
 
 right_canvas = tk.Frame(right_frame)
