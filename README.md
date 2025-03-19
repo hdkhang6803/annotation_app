@@ -39,9 +39,9 @@
 ## Hướng dẫn cài đặt
 0. Tải toàn bộ ảnh và các file CSV về máy (Liên hệ chủ repo lấy link).
 1. `git clone https://github.com/hdkhang6803/annotation_app.git`
-2. `git checkout label-app`
+2. `git checkout label-app` (`git pull` để update code mới nhất)
 3. `cd app`
-4. Tạo file .env trong thư mục image-review-app:
+4. Tạo file .env trong thư mục app:
   ```
     USER_ID="khang" # Tên của bạn
     IMAGE_DIR = "E:/LSCDATA/keyframes"

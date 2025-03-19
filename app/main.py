@@ -523,6 +523,7 @@ def load_images():
 
     global filename_label
     filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (filename_label)
+    update_progress_label()
 
 # Select output directory
 def select_output_folder():
@@ -813,7 +814,7 @@ neighbor_button = tk.Button(label_box_frame, text="Load Neighbors", font=("Arial
 neighbor_button.grid(row=1, column=3, padx=5)
 
  # **Main Layout Frame**
-main_frame = tk.Frame(root)
+main_frame = tk.Frame(root, height=500)
 main_frame.pack(expand=True, fill="both")
 
 # **Left Section (Neighbors - Before)**
