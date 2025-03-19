@@ -747,7 +747,6 @@ def go_back():
         current_button.config(bg="green", highlightbackground="green", activebackground="green")
 
     current_index = index_path[max(index_path.index(current_index) - 1, 0)]
-    print(f"back Current index: {current_index}, Temp index: {temp_index}, index_path: {index_path}")
     if current_index >= 0:
         global filename_label
         img_path = image_list[current_index]
@@ -773,7 +772,6 @@ def go_next():
         temp_index = current_index
         current_button.config(bg="green", highlightbackground="green", activebackground="green")
     current_index = index_path[min(index_path.index(current_index) + 1, len(index_path) - 1)]
-    print(f"next Current index: {current_index}, Temp index: {temp_index}, index_path: {index_path}")
     if current_index < len(image_list):
         global filename_label
         img_path = image_list[current_index]
@@ -847,7 +845,7 @@ csv_frame.pack(fill="x", padx=10)
 # tk.Button(csv_frame, text="Set", font=("Arial", 12), command=set_csv_filename).pack(side="left", padx=5)
 
 # Slider for controlling no_return_records
-tk.Button(csv_frame, text="Load Images", font=("Arial", 9), command=load_images).pack(side="left", padx=10)
+tk.Button(csv_frame, text="Load CSV", font=("Arial", 9), command=load_images).pack(side="left", padx=10)
 Label(csv_frame, text="Returned Records: ", font=("Arial", 8)).pack(side="left", padx=5)
 slider = tk.Scale(csv_frame, from_=10, to=30, orient="horizontal", length=200,
                   font=("Arial", 9), command=update_no_return_records)
@@ -948,5 +946,9 @@ if json_file:
         label_data = sorted(json.load(f))  # Sort labels alphabetically
     print("Loaded labels from JSON file.")
     refresh_label_buttons(label_data, label_inner_frame, label_canvas, on_label_click)
+
+root.bind("<Right>", lambda event: go_next())
+root.bind("<Left>", lambda event: go_back())
+root.bind("<Down>", lambda event: to_current())
 
 root.mainloop()
