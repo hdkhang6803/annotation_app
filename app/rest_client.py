@@ -43,7 +43,6 @@ class RestClient:
         for image in annotated_images:
             image_ids.append(image.split("/")[-1])
         payload = {"user": session_id, "video_id": video_id, "prev_ann_image_ids": annotated_images}
-        print(payload)
 
         response = requests.post(url, json=payload, timeout=5)
         response.raise_for_status()
@@ -72,7 +71,6 @@ class RestClient:
             session_id = self.user_id
         url = f"{self.base_url}/update"
         payload = {"user": session_id, "new_ann_image_ids": accepted_images}
-        print(payload)
 
         response = requests.post(url, json=payload, timeout=5)
         response.raise_for_status()

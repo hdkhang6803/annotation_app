@@ -39,23 +39,22 @@
 ## Hướng dẫn cài đặt
 0. Tải toàn bộ ảnh và các file CSV về máy (Liên hệ chủ repo lấy link).
 1. `git clone https://github.com/hdkhang6803/annotation_app.git`
-2. `git checkout user-app`
-3. `cd image-review-app`
+2. `git checkout label-app`
+3. `cd app`
 4. Tạo file .env trong thư mục image-review-app:
   ```
-  IMAGE_DIR="E:/LSCDATA/keyframes" # (thư mục chứa toàn bộ ảnh)
-  OUTPUT_DIR="E:/LSCDATA/golden_corpus/ver2" # (thư mục chứa output)
-  TEMP_DIR="E:/LSCDATA/golden_corpus/ver2/temp" # (thư mục tạm trong folder output)
-  ORIGIN_GOLDEN_CORPUS="E:/LSCDATA/golden_corpus/ver1" # optional
+    USER_ID="khang" # Tên của bạn
+    IMAGE_DIR = "E:/LSCDATA/keyframes"
+    LABEL_FILE = "../unique_new_labels.json" # KHÔNG chỉnh
   ```
 5. `pip install -r requirements.txt`
-6. `py gui.py`
-7. Chọn SELECT CSV. Chọn tiếp vào file CSV được phân công
+6. `py main.py`
+7. Chọn LOAD IMAGES. Chọn tiếp vào file CSV được phân công
 
 ---
 
 ## Mô tả
-- Sau khi load CSV thành công, các bạn sẽ thấy câu hỏi `Is <tên label> the main activity of this image?`. Các bạn chỉ cần check bằng cách bấm `APPROVE` (hotkey: phím A) hoặc `DECLINE` (hotkey: phím D).
+- Sau khi load CSV thành công, các bạn sẽ thấy ảnh được hiển thị. Các bạn tiến hành chọn vào label tương ứng với ảnh đó.
 - Nếu muốn quay lại record trước đó thì bấm nút `BACK` (hotkey: Left) và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**. Nút `NEXT` (hotkey: Right)
 - Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` (hotkey: S) để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
 

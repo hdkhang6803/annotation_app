@@ -112,7 +112,6 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
         try:
             temp_records = propagated_records.copy()
             temp_records.append(get_path_for_vector_db(image_list[current_index]).split(".")[0])
-            print(temp_records)
             if (api_client.send_accepted_data(temp_records)):
                 print("Successfully sent accepted data to server.")
             else:
@@ -292,6 +291,7 @@ def display_image(canvas, image_path, max_size, row=0, col=0, clear_previous=Tru
         label.image = img_tk  # Keep reference to prevent garbage collection
         label.grid(row=row, column=col, padx=5, pady=5)  # Place in grid
 
+
         # Close the image to free memory (reduces "Fail to allocate bitmap" issue)
         img.close()     
 
@@ -456,25 +456,25 @@ def load_images():
         except Exception as e:
             messagebox.showerror("Error", f"Could not read CSV file: {e}")
 
-    # global current_video_id
-    # try:
-    #     video_id = os.path.splitext(os.path.basename(csv_file))[0]  # Use CSV filename as video_id
-    #     current_video_id = video_id
-    #     if not api_client.init(video_id, []):
-    #         raise Exception("Could not clear session.")
-    # except Exception as e:
-    #     print(f"Error clearing session: {e}")
-    #     messagebox.showerror("Error", f"Could not clear session: {e}")
-    #     return
+    global current_video_id
+    try:
+        video_id = os.path.splitext(os.path.basename(csv_file))[0]  # Use CSV filename as video_id
+        current_video_id = video_id
+        if not api_client.init(video_id, []):
+            raise Exception("Could not clear session.")
+    except Exception as e:
+        print(f"Error clearing session: {e}")
+        messagebox.showerror("Error", f"Could not clear session: {e}")
+        return
 
-    # try: 
-    #     temp = list(annotated_images)
-    #     if not api_client.init(current_video_id, temp):
-    #         raise Exception("Could not send annotated data.")
-    # except Exception as e:
-    #     print(f"Error sending past data: {e}")
-    #     messagebox.showerror("Error", f"Could not load_images: {e}")
-    #     return
+    try: 
+        temp = list(annotated_images)
+        if not api_client.init(current_video_id, temp):
+            raise Exception("Could not send annotated data.")
+    except Exception as e:
+        print(f"Error sending past data: {e}")
+        messagebox.showerror("Error", f"Could not load_images: {e}")
+        return
 
     # Read images from the CSV file
     try:
@@ -632,7 +632,6 @@ def show_loading():
     global loading_label
     loading_label.config(text="Processing...", fg="blue")
     root.update_idletasks()  # Update UI immediately
-    print("show")
 
 def hide_loading():
     """Hides loading message when API request is complete."""
@@ -641,7 +640,7 @@ def hide_loading():
 
 def clear_label_boxes():
     """Clears the selected labels from both label boxes."""
-    global selected_labels
+    global selected_labels, label_box_1
     selected_labels = ["", ""]
     label_box_1.config(state="normal")
     label_box_1.delete(0, tk.END)
@@ -664,7 +663,14 @@ def move_to_next_image():
             move_to_next_image()
             return
 
-        filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (img_label, filename_label)
+        global left_canvas, right_canvas
+        filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (filename_label)
+        # Clear left & right panels (neighbors are loaded separately)
+        
+        for widget in left_canvas.winfo_children():
+            widget.destroy()
+        for widget in right_canvas.winfo_children():
+            widget.destroy()
     else:
         messagebox.showinfo("Done", "All images labeled!")
         root.quit()
