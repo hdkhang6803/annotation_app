@@ -831,6 +831,7 @@ label_canvas.pack(side="left", fill="x", expand=True)
 label_scrollbar.pack(side="right", fill="y")
 
 label_canvas.bind("<MouseWheel>", on_mouse_scroll_label_canvas)
+root.bind("<s>", lambda event: load_neighbors())
 # root.bind("<Tab>", on_tab_press)  # Bind Tab key to trigger save_annotation
 
 # Load labels

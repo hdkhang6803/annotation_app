@@ -47,16 +47,16 @@
     IMAGE_DIR = "E:/LSCDATA/keyframes"
     LABEL_FILE = "../unique_new_labels.json" # KHÔNG chỉnh
   ```
-5. `pip install -r requirements.txt`
-6. `py main.py`
-7. Chọn LOAD IMAGES. Chọn tiếp vào file CSV được phân công
+5. `py main.py`
+6. Chọn LOAD IMAGES. Chọn tiếp vào file CSV được phân công
 
 ---
 
 ## Mô tả
 - Sau khi load CSV thành công, các bạn sẽ thấy ảnh được hiển thị. Các bạn tiến hành chọn vào label tương ứng với ảnh đó.
-- Nếu muốn quay lại record trước đó thì bấm nút `BACK` (hotkey: Left) và check lại (A hoặc D). Sau đó A hoặc D tiếp từ ảnh đó trở về sau. **(Nên tắt TELEX để dễ thao tác)**. Nút `NEXT` (hotkey: Right)
+- Sau khi chọn xong label, các bạn **đợi 1 lúc**, sẽ có các ảnh tương tự ảnh đã label gửi về từ server. Các bạn kiểm tra kĩ xem các ảnh đó có cùng label với ảnh trước đó không, nếu có thì bấm `Submit`, nếu toàn bộ đều sai label thì bấm `Remove all`, nếu có vài ảnh sai label thì select các ảnh đó và bấm `Remove selected`.
 - Trong một số trường hợp khó label, các bạn có thể bấm `LOAD NEIGHBORS` (hotkey: S) để hiển thị các ảnh đứng trước (khung bên trái) và ảnh đứng sau (khung bên phải) của ảnh đang check. Thứ tự ảnh từ trái qua phải, từ trên xuống dưới.
+- Trong trường hợp các bạn lỡ label sai một nhóm ảnh nào đó, hãy tắt app, vào file annotations.csv xóa các record sai và load app lại như bình thường.
 
 
 
