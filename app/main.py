@@ -107,7 +107,7 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
         df.to_csv(output_csv, mode="a", header=not os.path.exists(output_csv), index=False)
 
         for img in propagated_records:
-            annotated_images.add(img)
+            annotated_images.add(img.replace("\\", "/"))
         
         try:
             temp_records = propagated_records.copy()
@@ -121,7 +121,7 @@ def show_propagated_records_dialog(root, base_path, propagated_records, label1, 
             print(f"Error sending accepted data: {e}")
             messagebox.showerror("Error", f"Failed to send accepted data to server: {e}")
         
-        update_progress_label()
+        # update_progress_label()
 
         # Update UI to the next available image
         move_to_next_image()
@@ -311,10 +311,6 @@ def show_image(current_index, image_list, left_canvas, center_canvas, right_canv
     # Get image paths (previous, current, next)
     global image_extension
     center_image_path = image_list[current_index] + image_extension if current_index < len(temp_all_images) else None
-    # idx_current_in_all_images = temp_all_images.index(current_image_path)
-    # prev_image_path = temp_all_images[idx_current_in_all_images - 1] if idx_current_in_all_images > 0 else None
-    # next_image_path = temp_all_images[idx_current_in_all_images + 1] if idx_current_in_all_images + 1 < len(temp_all_images) else None
-
     
 
     # Load images into labels
@@ -462,6 +458,8 @@ def load_images():
         current_video_id = video_id
         if not api_client.init(video_id, []):
             raise Exception("Could not clear session.")
+        else:
+            print(f"Session cleared")
     except Exception as e:
         print(f"Error clearing session: {e}")
         messagebox.showerror("Error", f"Could not clear session: {e}")
@@ -471,6 +469,8 @@ def load_images():
         temp = list(annotated_images)
         if not api_client.init(current_video_id, temp):
             raise Exception("Could not send annotated data.")
+        else:
+            print(f"Session initialized with {len(temp)} images")
     except Exception as e:
         print(f"Error sending past data: {e}")
         messagebox.showerror("Error", f"Could not load_images: {e}")
@@ -478,7 +478,7 @@ def load_images():
 
     # Read images from the CSV file
     try:
-        df = pd.read_csv(csv_file)
+        df = pd.read_csv(csv_file, header=None)
         image_filenames = df.iloc[:, 0].astype(str).tolist()  # Assuming images are in the first column
     except Exception as e:
         messagebox.showerror("Error", f"Could not read images from CSV: {e}")
@@ -490,7 +490,7 @@ def load_images():
     print(f"Total images: {total_images}")
 
     # Ensure we only load new images
-    image_list = sorted([img for img in all_images if os.path.splitext(get_path_for_vector_db(img))[0] not in annotated_images])
+    image_list = sorted([img for img in all_images if os.path.splitext(get_path_for_vector_db(img))[0].replace("\\", "/") not in annotated_images])
     global temp_all_images
     temp_all_images = sorted(all_images)
     print(f"New images to label: {len(image_list)}")
@@ -507,7 +507,20 @@ def load_images():
         print("Base path: ", base_path)
 
     current_index = 0
-    update_progress_label()  # Update progress count
+    # update_progress_label()  # Update progress count
+    img_path = image_list[current_index]
+    img_path = get_path_for_vector_db(img_path)
+    img_path = os.path.splitext(img_path)[0].replace("\\", "/")
+    try:
+        is_annotated_by_others = api_client.check_annotated(img_path)
+        if is_annotated_by_others:
+            annotated_images.add(img_path)
+            move_to_next_image()
+            return
+    except Exception as e:
+        print(f"Error checking annotation: {e}")
+        messagebox.showerror("Error", f"Could not check annotation: {e}")
+
     global filename_label
     filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (filename_label)
 
@@ -520,7 +533,15 @@ def select_output_folder():
 
 # Update progress label
 def update_progress_label():
-    progress_label.config(text=f"Progress: {len(annotated_images)}/{total_images}")
+    global annotated_images, image_list, current_index
+    remaining_items = len([img for img in image_list if os.path.splitext(get_path_for_vector_db(img))[0].replace('\\', '/') not in annotated_images])
+    progress_label.config(text=f"Remaining items: {remaining_items}")
+
+    update_total_images_label()
+
+def update_total_images_label():
+    global annotated_images
+    total_label.config(text=f"Total annotated: {len(annotated_images)}")
 
 # Save annotation (copy image instead of moving)
 def save_annotation(label1, label2 = "", skip_api_call=False):
@@ -533,7 +554,7 @@ def save_annotation(label1, label2 = "", skip_api_call=False):
 
     image_name = image_list[current_index]
     image_name = get_path_for_vector_db(image_name) # Only for LSC dataset
-    image_name_no_ext = str(os.path.splitext(image_name)[0])
+    image_name_no_ext = str(os.path.splitext(image_name)[0]).replace("\\", "/")
 
      # If API call should be skipped, just append the record to CSV and move to the next image
     if skip_api_call:
@@ -541,7 +562,7 @@ def save_annotation(label1, label2 = "", skip_api_call=False):
         df = pd.DataFrame([[image_name_no_ext, label1, label2]], columns=csv_columns)
         df.to_csv(output_csv, mode="a", header=not os.path.exists(output_csv), index=False)
         annotated_images.add(image_name_no_ext)
-        update_progress_label()
+        # update_progress_label()
         move_to_next_image()
         return
     # label_folder = os.path.join(output_dir, label)
@@ -658,10 +679,20 @@ def move_to_next_image():
         global filename_label
         img_path = image_list[current_index]
         img_path = get_path_for_vector_db(img_path)
-        img_path = os.path.splitext(img_path)[0]
+        img_path = os.path.splitext(img_path)[0].replace("\\", "/")
         if img_path in annotated_images:
             move_to_next_image()
             return
+        
+        try:
+            is_annotated_by_others = api_client.check_annotated(img_path)
+            if is_annotated_by_others:
+                annotated_images.add(img_path)
+                move_to_next_image()
+                return
+        except Exception as e:
+            print(f"Error checking annotation: {e}")
+            messagebox.showerror("Error", f"Could not check annotation: {e}")
 
         global left_canvas, right_canvas
         filename_label = show_image(current_index, image_list, left_canvas, center_canvas, right_canvas, filename_label) or (filename_label)
@@ -671,6 +702,7 @@ def move_to_next_image():
             widget.destroy()
         for widget in right_canvas.winfo_children():
             widget.destroy()
+        update_progress_label()
     else:
         messagebox.showinfo("Done", "All images labeled!")
         root.quit()
@@ -813,8 +845,14 @@ filename_label.pack(pady=5)
 
 
 # Progress Label
-progress_label = tk.Label(root, text="Progress: 0/0", font=("Arial", 12))
-progress_label.pack(pady=5)
+progress_frame = tk.Frame(root)
+progress_frame.pack(pady=5)
+
+progress_label = tk.Label(progress_frame, text="Remaining items: 0", font=("Arial", 12))
+progress_label.pack(side="left", padx=5)
+
+total_label = tk.Label(progress_frame, text="Total items: 0", font=("Arial", 12))
+total_label.pack(side="left", padx=5)
 
 # Scrollable Label Selection Area
 label_container = tk.Frame(root)

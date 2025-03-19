@@ -94,4 +94,14 @@ class RestClient:
                 final_res.append(neighbor)
             return final_res
         return []
+
+    def check_annotated(self, image_url):
+        """Check if the image is already annotated."""
+        image_url = get_path_for_vector_db(image_url)
+        payload = {"image_id": image_url}
+        url = f"{self.base_url}/check_annotated"
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            return response.json().get("status")
+        return False
     
