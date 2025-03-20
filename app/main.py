@@ -557,10 +557,10 @@ def save_annotation(label1, label2 = "", skip_api_call=False):
     try: 
         response = api_client.get_similars(image_name_no_ext, no_return_records=no_return_records)
     except Exception as e:
-        print(f"Error sending annotation: {e}")
+        print(f"Error getting similars: {e}")
         hide_loading()
         clear_label_boxes()
-        messagebox.showerror("Error", f"Could not send annotation: {e}")
+        messagebox.showerror("Error", f"Could not get similars: {e}")
         return
     finally:  
         hide_loading()
